@@ -17,7 +17,7 @@ domains = []
 domains.append('xpositive ypositive zpositive')
 
 fNameBase = 'save as "/Users/michaelafanasiev/Development/src/code/' \
-  'comprehensive_earth_model/Exodus/scaleUp/'
+  'comprehensive_earth_model/Exodus/scaleUp/geom/masters/'
 tPath     = "/Applications/Trelis-15.0.app/Contents/MacOS/Trelis-15.0"
 
 for domain in domains:
@@ -45,6 +45,7 @@ for domain in domains:
     
     if opt == 1:
       file.write ('create sphere radius %d' % (rad) + domain + "\n" )
+      file.write ('vol 1 name masters \n')
         
     surfString = surfString + ' ' + str (tSurf) + ' ' + str (bSurf)
     bSurf = bSurf + 5
