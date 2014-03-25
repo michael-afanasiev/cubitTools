@@ -84,4 +84,3 @@ if rotAng != 0.:
     
 cubit.cmd ('save as "' + geomPath + '/cutters/' + name + \
   '_cutter.cub" overwrite' )
-  

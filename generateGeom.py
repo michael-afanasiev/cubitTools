@@ -1,83 +1,72 @@
-#! /usr/local/bin/python
+#! /usr/bin/python2.6
 
-import subprocess
+import cubit
+import sys
 import os
-
-top = int ( raw_input ('Top layer [radius]\n') )
-bot = int ( raw_input ('Bottom layer [radius]\n') )
-dis = int ( raw_input ('Radial discretization\n') ) * (-1)
-opt = int ( raw_input ('[0] Layers \n[1] Center\n'))
-
-if opt == 0:
-  optString = 'surface'
-if opt == 1:
-  optString = 'volume'
-
-domains = []
-domains.append('xpositive ypositive zpositive')
 
 fNameBase = 'save as "/Users/michaelafanasiev/Development/src/code/' \
   'comprehensive_earth_model/Exodus/scaleUp/geom/masters/'
-tPath     = "/Applications/Trelis-15.0.app/Contents/MacOS/Trelis-15.0"
 
-for domain in domains:
-  
-  if domain == domains[0]:
-    fName = 'col0-90.lon0-90'
-    
-  fSub  = '.rad' + str(bot).zfill(4) + '-' + str(top).zfill(4) + \
-    '.000.cub" overwrite journal'
-  fPath = "./template" + str(top) + ".jou"
-  
-  file = open (fPath, 'w')
+if ( len (sys.argv) < 2 or sys.argv[1] == '-h' ):
+  sys.exit ( 'Usage: ./generateGeom -t <val> -b <val> -d <val> \
+    \n-t: top layer (radius, [m]) \n-b: bottom layer (radius [m]) \
+    \n-d: radial discretization [m]' )
 
-  tSurf      = 1
-  bSurf      = 5
-  surfString = ''
-  i = 1
-  for rad in range (top, bot, dis):
-  
-    if opt == 0:
-      file.write ('create sphere radius %d inner radius %d ' % 
-      (rad, rad-abs(dis)) + domain + "\n" )
-      file.write ('vol ' + str(i) + ' name "masters' + str(i) + '"\n')
-      i = i + 1
+for i in range (len (sys.argv) - 1 ):
+  if sys.argv[i] == '-t':
+    top = int (sys.argv[i+1])
+  if sys.argv[i] == '-b':
+    bot = int (sys.argv[i+1])
+  if sys.argv[i] == '-d':
+    dis = int (sys.argv[i+1])
     
-    if opt == 1:
-      file.write ('create sphere radius %d' % (rad) + domain + "\n" )
-      file.write ('vol 1 name masters \n')
-        
-    surfString = surfString + ' ' + str (tSurf) + ' ' + str (bSurf)
-    bSurf = bSurf + 5
-    tSurf = tSurf + 5
-    
-  file.write ( "group 'Surfs' equals Surface " + surfString + '\n' )
-  file.write ( "group 'Masters' equals Volume all\n" )
-  
-  if opt == 0:
-    file.write ( 'imprint volume all\n' )
-    file.write ( 'merge volume all\n' )
+fSub  = '.rad' + str(bot).zfill(4) + '-' + str(top).zfill(4) + \
+  '.000.cub" overwrite journal'
 
-  file.write ( fNameBase + 'col000-090.lon000-090' + fSub + '\n' )
-  file.write ( 'rotate volume all angle 90 about z include_merged\n' )
-  file.write ( fNameBase + 'col000-090.lon090-180' + fSub + '\n' )
-  file.write ( 'rotate volume all angle 90 about z include_merged\n' )
-  file.write ( fNameBase + 'col000-090.lon180-270' + fSub + '\n' )
-  file.write ( 'rotate volume all angle 90 about z include_merged\n' )
-  file.write ( fNameBase + 'col000-090.lon270-360' + fSub + '\n' )
-  file.write ( 'rotate volume all angle 90 about z include_merged\n' )
+if ( bot >= top ):
+  sys.exit ('Bottom is greater than top. Try again.')
+
+cubit.init ('.')
+cubit.cmd  ('set journal off')
+
+if ( bot != 0 ):
+  cubit.cmd  ( 'create sphere radius %d inner radius %d ' % (top, bot) +
+    'xpositive ypositive zpositive' )
+else:
+  cubit.cmd ( 'create sphere radius ' + str (top) + ' xpos ypos zpos')
   
-  file.write ( 'volume all reflect Z\n' )
-  
-  file.write ( fNameBase + 'col090-180.lon000-090' + fSub + '\n' )
-  file.write ( 'rotate volume all angle 90 about z include_merged\n' )
-  file.write ( fNameBase + 'col090-180.lon090-180' + fSub + '\n' )
-  file.write ( 'rotate volume all angle 90 about z include_merged\n' )
-  file.write ( fNameBase + 'col090-180.lon180-270' + fSub + '\n' )
-  file.write ( 'rotate volume all angle 90 about z include_merged\n' )
-  file.write ( fNameBase + 'col090-180.lon270-360' + fSub + '\n' )
-  
-  file.write ( 'quit' )
-  file.close ( )
+cubit.cmd ( 'vol 1 name "masters"' )
+
+if ( dis != 0 ):
+  for i, rad in enumerate (range (top-dis, bot+dis, dis * (-1))):
+    cubit.cmd ( 'create sphere radius ' + str (rad) )
+    cubit.cmd ( 'webcut vol ' + str (i+1) + ' with tool vol ' + str (i+2) )
+    cubit.cmd ( 'delete vol ' + str (i+2) )
+    cubit.cmd ( 'compress all' )
+    
+  cubit.cmd ( 'imprint volume all\n' )
+  cubit.cmd ( 'merge volume all\n' )
       
-  subprocess.call ([tPath + " -nographics " + fPath], shell=True, stdout=None)
+cubit.cmd ( "group 'Masters' equals Volume all\n" )
+
+cubit.cmd ( fNameBase + 'col000-090.lon000-090' + fSub + '\n' )
+cubit.cmd ( 'rotate volume all angle 90 about z include_merged\n' )
+cubit.cmd ( fNameBase + 'col000-090.lon090-180' + fSub + '\n' )
+cubit.cmd ( 'rotate volume all angle 90 about z include_merged\n' )
+cubit.cmd ( fNameBase + 'col000-090.lon180-270' + fSub + '\n' )
+cubit.cmd ( 'rotate volume all angle 90 about z include_merged\n' )
+cubit.cmd ( fNameBase + 'col000-090.lon270-360' + fSub + '\n' )
+cubit.cmd ( 'rotate volume all angle 90 about z include_merged\n' )
+cubit.cmd ( 'volume all reflect Z\n' )
+cubit.cmd ( fNameBase + 'col090-180.lon000-090' + fSub + '\n' )
+cubit.cmd ( 'rotate volume all angle 90 about z include_merged\n' )
+cubit.cmd ( fNameBase + 'col090-180.lon090-180' + fSub + '\n' )
+cubit.cmd ( 'rotate volume all angle 90 about z include_merged\n' )
+cubit.cmd ( fNameBase + 'col090-180.lon180-270' + fSub + '\n' )
+cubit.cmd ( 'rotate volume all angle 90 about z include_merged\n' )
+cubit.cmd ( fNameBase + 'col090-180.lon270-360' + fSub + '\n' )
+
+if ( cubit.get_error_count() != 0 ):
+  print "I'm sorry to say that I've detected some errors."
+
+cubit.cmd ( 'quit' )
