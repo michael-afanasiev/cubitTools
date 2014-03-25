@@ -113,7 +113,7 @@ for file in os.listdir ( geomPath + 'masters/' ):
     if Japan:
       print 'Found Japan'
       names.append ('Japan')
-      sizes.append (params['Japan'])          
+      sizes.append (params['Japan'])  
     if SouthAtlantic:
       print 'Found SouthAtlantic'
       names.append ('SouthAtlantic')
@@ -135,14 +135,20 @@ for file in os.listdir ( geomPath + 'masters/' ):
         
       cubit.cmd ('subtract volume with name "' + region + 
         '_cutter" from volume with name "masters*"')
-  
-    cubit.cmd ('del vol with name "*_cutter')          
-  
-    if ( cubit.get_volume_count() > 1 ):
-      pass
-      # cubit.cmd ( 'imprint all' )
-      # cubit.cmd ( 'merge all' )   
 
+    cubit.cmd    ('del vol with name "*_cutter')   
+  
+    if Japan:
+      cubit.cmd ('unite vol with name "Japan*"')        
+    if SouthAtlantic:
+      cubit.cmd ('unite vol with name "SouthAtlantic*"')        
+    if Australia:
+      cubit.cmd ('unite vol with name "Australia*"')        
+    if Anatolia:
+      cubit.cmd ('unite vol with name "Anatolia*"')        
+    if Europe:
+      cubit.cmd ('unite vol with name "Europe* "')        
+        
     cubit.cmd ('compress all')    
       
     if names:
