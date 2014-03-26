@@ -95,7 +95,7 @@ for file in os.listdir ( geomPath + 'masters/' ):
     cubit.cmd ('compress all')
 
     numVolumes  = cubit.get_volume_count ()
-    volumeIds   = [x for x in range (numVolumes)]    
+    volumeIds   = [x for x in range (1, numVolumes+1)]    
     overLapping = cubit.get_overlapping_volumes ( volumeIds )
     if overLapping:
       for num in overLapping:
@@ -113,7 +113,7 @@ for file in os.listdir ( geomPath + 'masters/' ):
     if Japan:
       print 'Found Japan'
       names.append ('Japan')
-      sizes.append (params['Japan'])          
+      sizes.append (params['Japan'])  
     if SouthAtlantic:
       print 'Found SouthAtlantic'
       names.append ('SouthAtlantic')
@@ -136,7 +136,7 @@ for file in os.listdir ( geomPath + 'masters/' ):
       cubit.cmd ('subtract volume with name "' + region + 
         '_cutter" from volume with name "masters*"')
   
-    cubit.cmd ('del vol with name "*_cutter')          
+    cubit.cmd ('del vol with name "*_cutter')       
   
     if ( cubit.get_volume_count() > 1 ):
       cubit.cmd ( 'imprint all' )
