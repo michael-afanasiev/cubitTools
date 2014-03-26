@@ -39,4 +39,3 @@ for file in os.listdir ( geomPath + 'regions_meshed/' ):
     cubit.cmd ( 'export mesh "' + path + 'mesh/refined/' + exoFileName + 
       '" overwrite' )
     sys.exit()
-  

@@ -142,7 +142,7 @@ for file in os.listdir ( geomPath + 'masters/' ):
       cubit.cmd ( 'imprint all' )
       cubit.cmd ( 'merge all' )   
 
-    cubit.cmd ('compress all')    
+    cubit.cmd ( 'compress all' )    
       
     if names:
       for region, size in zip (names, sizes):
@@ -158,12 +158,6 @@ for file in os.listdir ( geomPath + 'masters/' ):
 
     cubit.cmd ('save as "' + geomPath + 'regions/' + file + '" overwrite')  
   
-    if ( mode == '-m' ):
-      cubit.cmd ( 'mesh volume all' )
-      cubit.cmd ( 'unite body all include_mesh' )
-      cubit.cmd ( 'set large exodus file on' )
-      cubit.cmd ( 'export mesh "' + path + 'mesh/' + exoFileName + 
-        '" overwrite' )
   
     cubit.cmd ('reset')         
 
