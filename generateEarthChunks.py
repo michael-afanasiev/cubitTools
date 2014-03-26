@@ -37,16 +37,6 @@ else:
   
 cubit.cmd ( 'vol 1 name "masters"' )
 
-if ( dis != 0 ):
-  for i, rad in enumerate (range (top-dis, bot+dis, dis * (-1))):
-    cubit.cmd ( 'create sphere radius ' + str (rad) )
-    cubit.cmd ( 'webcut vol ' + str (i+1) + ' with tool vol ' + str (i+2) )
-    cubit.cmd ( 'delete vol ' + str (i+2) )
-    cubit.cmd ( 'compress all' )
-    
-  cubit.cmd ( 'imprint volume all\n' )
-  cubit.cmd ( 'merge volume all\n' )
-      
 cubit.cmd ( "group 'Masters' equals Volume all\n" )
 
 cubit.cmd ( fNameBase + 'col000-090.lon000-090' + fSub + '\n' )

@@ -61,7 +61,7 @@ for file in os.listdir ( geomPath + 'masters/' ):
     if radRegion == 'rad5701-5971':                                     
       params = { 'Europe': 50, 'Japan':  50, 'SouthAtlantic':  50, 
         'Australia': 50, 'Anatolia': 30  }
-    if radRegion == 'rad5971-6271':                                     
+    if radRegion == '5971-6271':                                     
       params = { 'Europe': 50, 'Japan':  50, 'SouthAtlantic':  50, 
         'Australia': 50, 'Anatolia': 30  }
     if radRegion == 'rad6271-6319':                                     
@@ -78,7 +78,7 @@ for file in os.listdir ( geomPath + 'masters/' ):
     cubit.cmd ('compress all')
     numVolumes = cubit.get_volume_count ()
 
-    volumeIds   = [x for x in range (numVolumes)]    
+    volumeIds   = [x for x in range (1, numVolumes+1)]    
     overLapping = cubit.get_overlapping_volumes ( volumeIds )
 
     if overLapping:
@@ -139,9 +139,8 @@ for file in os.listdir ( geomPath + 'masters/' ):
     cubit.cmd ('del vol with name "*_cutter')          
   
     if ( cubit.get_volume_count() > 1 ):
-      pass
-      # cubit.cmd ( 'imprint all' )
-      # cubit.cmd ( 'merge all' )   
+      cubit.cmd ( 'imprint all' )
+      cubit.cmd ( 'merge all' )   
 
     cubit.cmd ('compress all')    
       
@@ -152,18 +151,16 @@ for file in os.listdir ( geomPath + 'masters/' ):
           str (size) )        
         cubit.cmd ('surf in vol with name "' + region + '*" sizing function ' + 
           'constant' )
-        cubit.cmd ('mesh vol with name "' + region + '"')
           
-    # cubit.cmd ('surf in vol with name "masters*" size 100')                    
-    # cubit.cmd ('surf all sizing function constant')
+    cubit.cmd ('vol with name "masters*" scheme tetmesh')
+    cubit.cmd ('surf in vol with name "masters*" size 100')                    
+    cubit.cmd ('surf all sizing function constant')
 
     cubit.cmd ('save as "' + geomPath + 'regions/' + file + '" overwrite')  
   
     if ( mode == '-m' ):
-      cubit.cmd ( 'surf all scheme trimesh' )  
-      cubit.cmd ( 'mesh surf all ')
-      cubit.cmd ( 'vol all scheme tetmesh' )
       cubit.cmd ( 'mesh volume all' )
+      cubit.cmd ( 'unite body all include_mesh' )
       cubit.cmd ( 'set large exodus file on' )
       cubit.cmd ( 'export mesh "' + path + 'mesh/' + exoFileName + 
         '" overwrite' )
