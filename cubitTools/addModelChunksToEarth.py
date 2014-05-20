@@ -4,22 +4,29 @@ import os
 import sys
 import cubit
 
-if ( len (sys.argv) < 2 or sys.argv[1] == '-help' ):
-  sys.exit ('Usage: ./setupMesh <-m|-g> [-o] \n-m generate mesh and geometry \
-    \n-g only generate geometry \n[-o] overwrite mesh files')    
-mode = sys.argv[1]
+if ( len (sys.argv) < 2 or sys.argv[1] == '--help' or sys.argv[1] == '-h' ):
+  sys.exit ('Usage: ./setupMesh <-m|-g> -f [-o] \n-m generate mesh and geometry \
+    \n-g only generate geometry \n[-o] overwrite mesh files \
+    \n-f base write path (contains /mesh and /geom)')    
 
-if ( len (sys.argv) > 2 ):
-  overWrite = True
-  print 'Warning :: Overwriting mesh files.'
-  raw_input ('Press enter is this is ok.\n')
-else:
-  overWrite = False
+overWrite = false
 
-path     = '/Users/michaelafanasiev/Development/src/code/' \
-  'comprehensive_earth_model/Exodus/scaleUp/'
-geomPath = '/Users/michaelafanasiev/Development/src/code/' \
-  'comprehensive_earth_model/Exodus/scaleUp/geom/'
+for i in range (len (sys.argv) - 1 ):
+  if sys.argv[i] == '-m':
+    mode = '-m'
+  if sys.argv[i] == '-g':
+    mode = 'g'
+  if sys.argv[i] == '-f':
+    basePath = sys.argv[i+1]
+  if sys.argv[i] == '-o':
+    overWrite = True
+    print 'Warning :: Overwriting mesh files.'
+    raw_input ('Press enter is this is ok.\n')
+  else:
+    overWrite = False
+
+path     = basePath
+geomPath = basePath + 'geom/'
   
 cubit.init ('.')
 

@@ -4,13 +4,12 @@ import cubit
 import sys
 import os
 
-fNameBase = 'save as "/Users/michaelafanasiev/Development/src/code/' \
-  'comprehensive_earth_model/Exodus/scaleUp/geom/masters/'
 
 if ( len (sys.argv) < 2 or sys.argv[1] == '-h' ):
   sys.exit ( 'Usage: ./generateGeom -t <val> -b <val> -d <val> \
     \n-t: top layer (radius, [m]) \n-b: bottom layer (radius [m]) \
-    \n-d: radial discretization [m]' )
+    \n-d: radial discretization [m] \
+    \n-f: write directory' )
 
 for i in range (len (sys.argv) - 1 ):
   if sys.argv[i] == '-t':
@@ -19,7 +18,11 @@ for i in range (len (sys.argv) - 1 ):
     bot = int (sys.argv[i+1])
   if sys.argv[i] == '-d':
     dis = int (sys.argv[i+1])
+  if sys.argv[i] == '-f':
+    saveDir = (sys.argv[i+1])
     
+fNameBase = 'save as "' + saveDir
+
 fSub  = '.rad' + str(bot).zfill(4) + '-' + str(top).zfill(4) + \
   '.000.cub" overwrite journal'
 
