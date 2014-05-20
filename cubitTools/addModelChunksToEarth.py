@@ -9,7 +9,7 @@ if ( len (sys.argv) < 2 or sys.argv[1] == '--help' or sys.argv[1] == '-h' ):
     \n-g only generate geometry \n[-o] overwrite mesh files \
     \n-f base write path (contains /mesh and /geom)')    
 
-overWrite = false
+overWrite = False
 
 for i in range (len (sys.argv) - 1 ):
   if sys.argv[i] == '-m':
@@ -54,32 +54,32 @@ for file in os.listdir ( geomPath + 'masters/' ):
     fields    = file.split ('.')
     radRegion = fields[2]
     if radRegion == 'rad0000-1221':
-      params = { 'Europe': 100, 'Japan': 100, 'SouthAtlantic': 100, 
-        'Australia': 100, 'Anatolia': 30 }
+      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
+        'Australia': 25, 'Anatolia': 15 }
     if radRegion == 'rad1221-3480':                                     
-      params = { 'Europe': 100, 'Japan': 100, 'SouthAtlantic': 100, 
-        'Australia': 100, 'Anatolia': 30 }
+      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
+        'Australia': 25, 'Anatolia': 15 }
     if radRegion == 'rad3480-5371':                                     
-      params = { 'Europe': 100, 'Japan': 100, 'SouthAtlantic': 100, 
-        'Australia': 100, 'Anatolia': 30 }
+      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
+        'Australia': 25, 'Anatolia': 15 }
     if radRegion == 'rad5371-5701':                                     
-      params = { 'Europe': 100, 'Japan': 100, 'SouthAtlantic': 100, 
-        'Australia': 100, 'Anatolia': 30 }
+      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
+        'Australia': 25, 'Anatolia': 15 }
     if radRegion == 'rad5701-5971':                                     
-      params = { 'Europe': 50, 'Japan':  50, 'SouthAtlantic':  50, 
-        'Australia': 50, 'Anatolia': 30  }
+      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
+        'Australia': 25, 'Anatolia': 15  }
     if radRegion == '5971-6271':                                     
-      params = { 'Europe': 50, 'Japan':  50, 'SouthAtlantic':  50, 
-        'Australia': 50, 'Anatolia': 30  }
+      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
+        'Australia': 25, 'Anatolia': 15  }
     if radRegion == 'rad6271-6319':                                     
-      params = { 'Europe': 50, 'Japan':  50, 'SouthAtlantic':  50, 
-        'Australia': 50, 'Anatolia': 30  }
+      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
+        'Australia': 25, 'Anatolia': 15  }
     if radRegion == 'rad6319-6351':                                     
-      params = { 'Europe': 50, 'Japan':  50, 'SouthAtlantic':  50, 
-        'Australia': 50, 'Anatolia': 30  }
+      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
+        'Australia': 25, 'Anatolia': 15  }
     if radRegion == 'rad6351-6371':                                     
-      params = { 'Europe': 50, 'Japan':  50, 'SouthAtlantic':  50, 
-        'Australia': 50, 'Anatolia': 30  }
+      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
+        'Australia': 25, 'Anatolia': 15  }
 
     cubit.cmd ('import "' + geomPath + 'masters/' + file + '"')    
     cubit.cmd ('compress all')
