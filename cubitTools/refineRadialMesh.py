@@ -48,7 +48,9 @@ for file in os.listdir ( geomPath + 'regions_meshed/' ):
     targets[0] + ' target surface ' + targets[1] + ' anisotropic'
       
   cubit.cmd ( refineString )
+
+  cubit.cmd ( 'save as "' + geomPath + 'regions_refined/' + file + '" overwrite' )
   cubit.cmd ( 'export mesh "' + path + 'mesh/refined/' + exoFileName + 
     '" overwrite' )
   
-sys.exit()
+  sys.exit()

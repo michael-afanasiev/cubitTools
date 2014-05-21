@@ -3,6 +3,7 @@
 import cubit
 import sys
 import os
+import time
 
 
 if ( len (sys.argv) < 2 or sys.argv[1] == '-h' ):
@@ -28,6 +29,8 @@ fSub  = '.rad' + str(bot).zfill(4) + '-' + str(top).zfill(4) + \
 
 if ( bot >= top ):
   sys.exit ('Bottom is greater than top. Try again.')
+
+time.sleep(1)
 
 cubit.init ('.')
 cubit.cmd  ('set journal off')

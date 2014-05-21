@@ -5,15 +5,13 @@ import sys
 import cubit
 
 if ( len (sys.argv) < 2 or sys.argv[1] == '--help' or sys.argv[1] == '-h' ):
-  sys.exit ('Usage: ./setupMesh <-m|-g> -f [-o] \n-m generate mesh and geometry \
+  sys.exit ('Usage: ./setupMesh -g -f [-o] \n-m generate mesh and geometry \
     \n-g only generate geometry \n[-o] overwrite mesh files \
     \n-f base write path (contains /mesh and /geom)')    
 
 overWrite = False
 
 for i in range (len (sys.argv) - 1 ):
-  if sys.argv[i] == '-m':
-    mode = '-m'
   if sys.argv[i] == '-g':
     mode = 'g'
   if sys.argv[i] == '-f':
@@ -53,33 +51,8 @@ for file in os.listdir ( geomPath + 'masters/' ):
     # Set up surface sizing functions.
     fields    = file.split ('.')
     radRegion = fields[2]
-    if radRegion == 'rad0000-1221':
-      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
-        'Australia': 25, 'Anatolia': 15 }
-    if radRegion == 'rad1221-3480':                                     
-      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
-        'Australia': 25, 'Anatolia': 15 }
-    if radRegion == 'rad3480-5371':                                     
-      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
-        'Australia': 25, 'Anatolia': 15 }
-    if radRegion == 'rad5371-5701':                                     
-      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
-        'Australia': 25, 'Anatolia': 15 }
-    if radRegion == 'rad5701-5971':                                     
-      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
-        'Australia': 25, 'Anatolia': 15  }
-    if radRegion == '5971-6271':                                     
-      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
-        'Australia': 25, 'Anatolia': 15  }
-    if radRegion == 'rad6271-6319':                                     
-      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
-        'Australia': 25, 'Anatolia': 15  }
-    if radRegion == 'rad6319-6351':                                     
-      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
-        'Australia': 25, 'Anatolia': 15  }
-    if radRegion == 'rad6351-6371':                                     
-      params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
-        'Australia': 25, 'Anatolia': 15  }
+    params = { 'Europe': 25, 'Japan': 25, 'SouthAtlantic': 25, 
+      'Australia': 25, 'Anatolia': 15 }
 
     cubit.cmd ('import "' + geomPath + 'masters/' + file + '"')    
     cubit.cmd ('compress all')
@@ -145,27 +118,32 @@ for file in os.listdir ( geomPath + 'masters/' ):
   
     cubit.cmd ('del vol with name "*_cutter')       
   
-    if ( cubit.get_volume_count() > 1 ):
-      cubit.cmd ( 'imprint all' )
-      cubit.cmd ( 'merge all' )   
 
     cubit.cmd ( 'compress all' )    
       
+    cubit.cmd ('vol with name "masters*" scheme tetmesh')
+    cubit.cmd ('surf in vol with name "masters*" size 100')                    
+    cubit.cmd ('curve in vol with name "masters*" size 100')
+
     if names:
       for region, size in zip (names, sizes):
         cubit.cmd ('vol with name "' + region + '*" scheme tetmesh')
         cubit.cmd ('surf in vol with name "' + region + '*" size ' + 
+          str (size) )
+        cubit.cmd ('curve in vol with name "' + region + '*" size ' +
           str (size) )        
         cubit.cmd ('surf in vol with name "' + region + '*" sizing function ' + 
           'constant' )
           
-    cubit.cmd ('vol with name "masters*" scheme tetmesh')
-    cubit.cmd ('surf in vol with name "masters*" size 100')                    
     cubit.cmd ('surf all sizing function constant')
 
+    if ( cubit.get_volume_count() > 1 ):
+      pass
+      #cubit.cmd ( 'imprint all' )
+      #cubit.cmd ( 'merge all' )   
+
     cubit.cmd ('save as "' + geomPath + 'regions/' + file + '" overwrite')  
-  
-  
+   
     cubit.cmd ('reset')         
 
 if cubit.get_error_count () != 0:
