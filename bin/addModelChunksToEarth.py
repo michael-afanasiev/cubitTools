@@ -132,10 +132,10 @@ for file in os.listdir ( geomPath + 'masters/' ):
           str (size) )
         cubit.cmd ('curve in vol with name "' + region + '*" size ' +
           str (size) )        
-        cubit.cmd ('surf in vol with name "' + region + '*" sizing function ' + 
-          'constant' )
+        #cubit.cmd ('surf in vol with name "' + region + '*" sizing function ' + 
+        #  'constant' )
           
-    cubit.cmd ('surf all sizing function constant')
+    #cubit.cmd ('surf all sizing function constant')
 
     if ( cubit.get_volume_count() > 1 ):
       pass

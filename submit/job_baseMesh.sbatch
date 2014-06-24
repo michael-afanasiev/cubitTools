@@ -9,7 +9,7 @@
 #SBATCH --output=output/generateBaseMesh.%j.o
 #SBATCH --error=output/generateBaseMesh.%j.e
 
-cd /users/afanasm/src/codeDevelopment/cubitTools/cubitTools
+cd /users/afanasm/src/codeDevelopment/cubitTools
 
 if [ "$1" == "" ]; then echo "You forgot to specify prefix."; scancel %j; stop; fi
 
