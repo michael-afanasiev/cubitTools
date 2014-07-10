@@ -18,8 +18,8 @@ def colLonRad2xyz (col, lon, rad):
   return (x, y, z)
 
 R_EARTH  = 6371.
-geomPath = '/Users/michaelafanasiev/Development/src/code/' \
-  'comprehensive_earth_model/Exodus/scaleUp/geom'
+path     = '/mnt/lnec/afanasm/cubitScratch/mesh'
+geomPath = '/mnt/lnec/afanasm/cubitScratch/geom'
 
 name   = str ( raw_input ('Enter region name: '))
 colMax = input ('Enter max collatitude: ')
@@ -29,6 +29,12 @@ lonMin = input ('Enter min longitude: ')
 radMax = input ('Enter max radius: ')
 radMin = input ('Enter min radius: ')
 rotAng = input ('Enter rotation angle [degrees]: ')
+
+mesh = str ( raw_input ('Would you like to mesh the chunk? This is useful ' \
+    'for kernel manipulation. [y/n]: ') )
+
+if mesh == 'y':
+  meshSize = input ('Enter desired mesh size: ')
 
 if rotAng != 0:
   rotX   = input ('Enter X vector: ')
@@ -81,6 +87,15 @@ if rotAng != 0.:
   cubit.cmd('rotate volume 1 angle ' + str(-1 * rotAng) + \
     ' about origin 0 0 0 direction ' + str(rotX) + ' ' + \
     str(rotY) + ' ' + str(rotZ) + ' include_merged')
-    
+
 cubit.cmd ('save as "' + geomPath + '/cutters/' + name + \
   '_cutter.cub" overwrite' )
+
+if ( mesh == 'y' ):
+  cubit.cmd ( 'vol all scheme tetmesh' )
+  cubit.cmd ( 'surface all size ' + str (meshSize) )
+  cubit.cmd ( 'surface all sizing function constant' )
+  cubit.cmd ( 'mesh volume all' )
+
+  cubit.cmd ( 'export mesh "' + path + '/kernel/' + name + \
+      '_kernel.ex2" overwrite' )
