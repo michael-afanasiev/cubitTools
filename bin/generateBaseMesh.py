@@ -120,6 +120,9 @@ while unMeshed:
 cubit.cmd ( 'Volume all Smooth Scheme Laplacian' )
 cubit.cmd ( 'Smooth Volume all' )
 
+# Get some badass sidesets
+cubit.cmd ( 'Nodeset 1 surface in volume all with not is_merged' )
+
 # Write to exodus file.
 cubit.cmd ('set large exodus file on')
 
