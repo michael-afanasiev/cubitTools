@@ -5,6 +5,7 @@ import time
 import sys
 import os
 
+# Input.
 if ( len (sys.argv) < 2 or sys.argv[1] == '-h' ):
   sys.exit ( 'Usage: ./generateGeom -t <val> -b <val> -d <val> \
     \n-t: top layer (radius, [m]) \n-b: bottom layer (radius [m]) \
@@ -23,15 +24,18 @@ for i in range (len (sys.argv) - 1 ):
     
 fNameBase = 'save as "' + saveDir
 
-
+# Check whether or not we're retarded
 if ( bot >= top ):
     sys.exit ('Bottom is greater than top')
 
+# Nap (why?)
 time.sleep(1)
 
+# Start up the old girl
 cubit.init ('.')
 cubit.cmd  ('set journal off')
 
+# Loop and make the radial layers.
 for rad in range (top, bot, dis):
   
   cubit.cmd ('create sphere radius %d inner radius %d ' % (rad, rad-abs(dis)) + 
