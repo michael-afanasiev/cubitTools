@@ -3,11 +3,9 @@
 #SBATCH --partition=fichtner_compute
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-##SBATCH --mincpus=2
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=00:30:00
-#SBATCH --mem=512MB
-#SBATCH --nodelist=monchc010
+#SBATCH --mem=2GB
 #SBATCH --job-name="generateBaseMesh.$1"
 #SBATCH --output=output/generateBaseMesh.%j.o
 #SBATCH --error=output/generateBaseMesh.%j.e
