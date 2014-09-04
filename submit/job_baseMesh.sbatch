@@ -5,6 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=00:30:00
+#SBATCH --nodelist=monchc004
 #SBATCH --mem=2GB
 #SBATCH --job-name="generateBaseMesh.$1"
 #SBATCH --output=output/generateBaseMesh.%j.o
