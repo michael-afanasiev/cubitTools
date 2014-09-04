@@ -12,6 +12,4 @@
 
 cd /users/afanasm/src/codeDevelopment/cubitTools
 
-if [ "$1" == "" ]; then echo "You forgot to specify prefix."; scancel %j; stop; fi
-
 srun ./bin/generateBaseMesh.py -f /mnt/lnec/afanasm/cubitScratch/ -p $1 -t $2 -b $3
