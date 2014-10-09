@@ -15,6 +15,6 @@ To regenerate the mesh from scratch, follow these steps.
     spherical shells defined in step (1). Quite a cool script. It also sets the sizes of the regions. Currently, this is a bit tedious,
     as you have to edit the code and add entries to a sizing dictionary, but this can easily be outsourced to a parameter file.
 
-3.) The next step is to mesh the model. The driver script [./drivers/generateMeshDriver] will create a script that is used to submit the 
-    meshing as a series of batch jobs (submitting the .sbatch submit/job_meshDriver.sbatch]. Right now the script is set up for the dimensions
-    of the CEM. You can simply run it and it will create your submission script. Submit this, and voila! Your fully meshed CEM now exists.
+3.) The next step is to mesh the model. The driver script [./drivers/generateBaseMeshDriver] will create a script that is used to submit the 
+    meshing as a series of batch jobs (submitting the .sbatch submit/job_meshDriver.sbatch]. The script created will also be in './drivers' and will be called 'baseMeshDriver.sh'. 
+    Right now the script is set up for the dimensions of the CEM. You can simply run it and it will create your submission script. Submit this, and voila! Your fully meshed CEM now exists.

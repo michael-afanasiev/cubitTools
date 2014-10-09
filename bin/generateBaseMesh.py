@@ -42,7 +42,7 @@ for file in os.listdir ( geomPath + 'regions/' ):
     + fields[3] + '.ex2'
   newExoFileName = fields[0] + '.' + fields[1] + '.rad' + str (bottomRadius) + '-' \
     + str (topRadius) + '.' + fields[3] + '.ex2'
-  newCubFileName = fields[0] + '.' + fields[1] + '.rad' + str (bottomRadius) + '-' \
+  newCubFileName = fields[0] + '.' + fields[1] + '.rad' + str (bottomRadius).zfill(4) + '-' \
     + str (topRadius) + '.' + fields[3] + '.cub'
     
   
