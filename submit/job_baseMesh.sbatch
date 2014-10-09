@@ -1,6 +1,6 @@
 #! /bin/bash
 
-#SBATCH --partition=other_hugemem
+#SBATCH --partition=fichtner_compute
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1

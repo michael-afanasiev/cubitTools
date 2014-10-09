@@ -1,0 +1,8 @@
+# In this file, set the desired azimuthal mesh size (in km).
+# For example: Japan = 50.
+
+Europe        = 50
+Japan         = 50
+SouthAtlantic = 50
+Australia     = 50
+Anatolia      = 15
