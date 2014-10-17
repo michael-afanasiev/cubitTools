@@ -1,4 +1,4 @@
-#! /usr/bin/python2.6
+#!/usr/bin/env python
 
 import os
 import sys
@@ -19,7 +19,7 @@ def colLonRad2xyz (col, lon, rad):
 
 R_EARTH  = 6371.
 path     = '/mnt/lnec/afanasm/cubitScratch/mesh'
-geomPath = '/mnt/lnec/afanasm/cubitScratch/geom'
+geomPath = './' #'/mnt/lnec/afanasm/cubitScratch/geom'
 
 name   = str ( raw_input ('Enter region name: '))
 colMax = input ('Enter max collatitude: ')
@@ -88,8 +88,11 @@ if rotAng != 0.:
     ' about origin 0 0 0 direction ' + str(rotX) + ' ' + \
     str(rotY) + ' ' + str(rotZ) + ' include_merged')
 
-cubit.cmd ('save as "' + geomPath + '/cutters/' + name + \
-  '_cutter.cub" overwrite' )
+path = os.path.join (geomPath, "cutters",  name)
+
+if not os.path.exists (os.path.dirname (path)):
+  os.makedirs (os.path.dirname (path))
+cubit.cmd ('save as "' + path + '_cutter.cub" overwrite' )
 
 if ( mesh == 'y' ):
   cubit.cmd ( 'vol all scheme tetmesh' )
