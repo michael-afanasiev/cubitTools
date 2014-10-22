@@ -40,7 +40,7 @@ for file in os.listdir ( geomPath + 'regions/' ):
   fields      = file.split ('.')
   exoFileName = fields[0] + '.' + fields[1] + '.' + fields[2] + '.' \
     + fields[3] + '.ex2'
-  newExoFileName = fields[0] + '.' + fields[1] + '.rad' + str (bottomRadius) + '-' \
+  newExoFileName = fields[0] + '.' + fields[1] + '.rad' + str (bottomRadius).zfill(4) + '-' \
     + str (topRadius) + '.' + fields[3] + '.ex2'
   newCubFileName = fields[0] + '.' + fields[1] + '.rad' + str (bottomRadius).zfill(4) + '-' \
     + str (topRadius) + '.' + fields[3] + '.cub'
@@ -63,7 +63,7 @@ for file in os.listdir ( geomPath + 'regions/' ):
 # This is a counter on how many times we have to go back and retry the sizing.
 unMeshedTries = 0
 
-cubit.cmd ( 'surf all sizing function constant' )
+cubit.cmd ('surf all sizing function constant')
 
 # UnMeshed gets set to false if any of the volumes fail to mesh the first time through.
 while unMeshed:
@@ -71,6 +71,9 @@ while unMeshed:
   # Imprint and merge all the cute litte regions.
   cubit.cmd ( 'imprint vol all' )
   cubit.cmd ( 'merge vol all' )
+
+  cubit.cmd ('surf all scheme trimesh')
+  cubit.cmd ('surf all sizing function constant')
 
   # Mesh surfaces first (this seems to be safer for some reason).
   cubit.cmd ( 'mesh surf all' )
@@ -119,6 +122,9 @@ while unMeshed:
 # Smooth mesh (probably just for kicks).
 cubit.cmd ( 'Volume all Smooth Scheme Laplacian' )
 cubit.cmd ( 'Smooth Volume all' )
+
+# Get some badass sidesets
+cubit.cmd ( 'Sideset 1 surface in volume all with not is_merged' )
 
 # Write to exodus file.
 cubit.cmd ('set large exodus file on')

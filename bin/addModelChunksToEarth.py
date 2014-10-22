@@ -49,7 +49,7 @@ for file in os.listdir ( geomPath + 'masters/' ):
 
   fields      = file.split ('.')
   
-  cubit.silent_cmd  ('open "' + geomPath + 'cutters/all_cutters.cub')
+  cubit.cmd  ('open "' + geomPath + 'cutters/all_cutters.cub')
 
   paramBool = params.copy ()
   for key in paramBool.keys ():
@@ -62,8 +62,8 @@ for file in os.listdir ( geomPath + 'masters/' ):
   fields    = file.split ('.')
   radRegion = fields[2]
 
-  cubit.silent_cmd ('import "' + geomPath + 'masters/' + file + '"')    
-  cubit.silent_cmd ('compress all')
+  cubit.cmd ('import "' + geomPath + 'masters/' + file + '"')    
+  cubit.cmd ('compress all')
   numVolumes = cubit.get_volume_count ()
 
   volumeIds   = [x for x in range (1, numVolumes+1)]    
@@ -78,9 +78,9 @@ for file in os.listdir ( geomPath + 'masters/' ):
         vol1 = str (overLapping[i+1])
         vol2 = str (overLapping[i])
 
-      cubit.silent_cmd ('intersect volume ' + vol1 + ' ' + vol2 + ' keep')           
+      cubit.cmd ('intersect volume ' + vol1 + ' ' + vol2 + ' keep')           
   
-  cubit.silent_cmd ('compress all')
+  cubit.cmd ('compress all')
 
   
   numVolumes  = cubit.get_volume_count ()
@@ -92,61 +92,65 @@ for file in os.listdir ( geomPath + 'masters/' ):
         if cubit.get_entity_name ('volume', num).startswith (key) and key not in names:
           names.append (key)
           sizes.append (params[key])
-     
+
+  if 'Japan' in names and names[0] != 'Japan':
+    ind = names.index ('Japan')
+    names[0], names[ind] = names[ind], names[0]
+    print 'Swapped: ' + str (names)
+
   # for all named regions, subtract them from the master earth.
   for region in names:
       
-    cubit.silent_cmd ('subtract volume with name "' + region + 
+    cubit.cmd ('subtract volume with name "' + region + 
       '_cutter" from volume with name "masters*"')
 
   # delete all the cutters when we're finished with them
-  cubit.silent_cmd ('del vol with name "*_cutter')       
+  cubit.cmd ('del vol with name "*_cutter')       
 
   # compress namespace.
-  cubit.silent_cmd ( 'compress all' )    
+  cubit.cmd ( 'compress all' )    
     
   # set the sizing functions of the master earth.
-  cubit.silent_cmd ('vol with name "masters*" scheme tetmesh')
-  cubit.silent_cmd ('surf in vol with name "masters*" size 100')                    
-  cubit.silent_cmd ('curve in vol with name "masters*" size 100')
+  cubit.cmd ('vol with name "masters*" scheme tetmesh')
+  cubit.cmd ('surf in vol with name "masters*" size 100')                    
+  cubit.cmd ('curve in vol with name "masters*" size 100')
 
   # go and apply the sizing functions to the proper volumes.
   if names:
     for region, size in zip (names, sizes):
-      cubit.silent_cmd ('vol with name "' + region + '*" scheme tetmesh')
-      cubit.silent_cmd ('surf in vol with name "' + region + '*" size ' + 
+      cubit.cmd ('vol with name "' + region + '*" scheme tetmesh')
+      cubit.cmd ('surf in vol with name "' + region + '*" size ' + 
         str (size) )
-      cubit.silent_cmd ('curve in vol with name "' + region + '*" size ' +
+      cubit.cmd ('curve in vol with name "' + region + '*" size ' +
         str (size) )        
  
   # name element blocks for master earth...
   blockCount = 1
-  cubit.silent_cmd ('block ' + str (blockCount) + ' volume with name "masters*"')
-  cubit.silent_cmd ('block ' + str (blockCount) + ' name "master"')
+  cubit.cmd ('block ' + str (blockCount) + ' volume with name "masters*"')
+  cubit.cmd ('block ' + str (blockCount) + ' name "master"')
  
   # and nodesets...
-  cubit.silent_cmd ('Nodeset ' + str (blockCount) + ' volume with name "masters*"')
-  cubit.silent_cmd ('Nodeset ' + str (blockCount) + ' name "master"')
+  cubit.cmd ('Nodeset ' + str (blockCount) + ' volume with name "masters*"')
+  cubit.cmd ('Nodeset ' + str (blockCount) + ' name "master"')
 
   # now go through and group the rest of the regions into blocks and nodesets
   blockCount = 2
   for region in names:
 
-    cubit.silent_cmd ('block ' + str (blockCount) + ' volume with name "' + region + '*"')
-    cubit.silent_cmd ('block ' + str (blockCount) + ' name "' + region + '"')
+    cubit.cmd ('block ' + str (blockCount) + ' volume with name "' + region + '*"')
+    cubit.cmd ('block ' + str (blockCount) + ' name "' + region + '"')
 
-    cubit.silent_cmd ('Nodeset ' + str (blockCount) + ' volume with name "' + region + '*"')
-    cubit.silent_cmd ('Nodeset ' + str (blockCount) + ' name "' + region + '"')
+    cubit.cmd ('Nodeset ' + str (blockCount) + ' volume with name "' + region + '*"')
+    cubit.cmd ('Nodeset ' + str (blockCount) + ' name "' + region + '"')
 
     blockCount = blockCount + 1
 
 
-  # Get some badass sidesets
-  cubit.cmd ( 'Sideset 1 surface in volume all with not is_merged' )
+  cubit.cmd ('Surface all scheme trimesh')
 
   # write and reset for next file.
-  cubit.silent_cmd ('save as "' + geomPath + 'regions/' + file + '" overwrite')  
-  cubit.silent_cmd ('reset')         
+  cubit.cmd ('save as "' + geomPath + 'regions/' + file + '" overwrite')  
+  cubit.cmd ('reset')         
 
 if cubit.get_error_count () != 0:
   print "Unfortunately, I found some errors"
